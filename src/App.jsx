@@ -10,7 +10,7 @@ function App() {
       <BrowserRouter>
         <nav>
           <ul>
-            <li> <Link to="/">Home</Link> </li>
+            <li className='text-red-500 text-4xl'> <Link to="/">Home</Link> </li>
             <li> <Link to="/popularbooks">Popular books</Link> </li>
             <li> <Link to="/mybooks" > My books </Link> </li>
           </ul>
