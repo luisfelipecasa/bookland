@@ -1,37 +1,71 @@
-import { ListFilter, X, Component, Calendar, Search } from "lucide-react";
+import { ListFilter, X, Component, SearchX, Search } from "lucide-react";
 import { useState, useEffect } from "react";
-import { getPokemons } from "../services/pokemonService";
-import BookCard from "../components/PokemonCard";
+import { getPokemons, getPokemonsByType, getPokemonByName } from "../services/pokemonService";
+import PokemonCard from "../components/PokemonCard";
 
 const Home = () => {
+    const types = [
+        { label: "Todos", value: "" },
+        { label: "Fogo", value: "fire" },
+        { label: "Água", value: "water" },
+        { label: "Grama", value: "grass" },
+        { label: "Elétrico", value: "electric" },
+        { label: "Inseto", value: "bug" },
+        { label: "Terra", value: "ground" },
+        { label: "Voador", value: "flying" },
+        { label: "Psíquico", value: "psychic" },
+        { label: "Normal", value: "normal" },
+        { label: "Fada", value: "fairy" },
+        { label: "Veneno", value: "poison" },
+        { label: "Pedra", value: "rock" },
+        { label: "Fantasma", value: "ghost" },
+        { label: "Aço", value: "steel" },
+        { label: "Dragão", value: "dragon" },
+        { label: "Lutador", value: "fighting" },
+        { label: "Gelo", value: "ice" },
+        { label: "Sombrio", value: "dark" }
+    ]
+    const [selectedType, setSelectedType] = useState("");
     const [pokemons, setPokemons] = useState([]);
     const [loading, setLoading] = useState(true)
+    const [searchName, setSearchName] = useState("");
+    const [error, setError] = useState("");
+    const [searching, setSearching] = useState(false);
 
     useEffect(() => {
         (async () => {
+            setError("");
+            setLoading(true);
             try {
-                const response = await getPokemons();
-                setPokemons(response);
-            } catch (error) {
-                console.error(error);
+                let data;
+                if (searchName) {
+                    const result = await getPokemonByName(searchName);
+                    data = result ? [result] : [];
+                    if (!result) setError("Pokémon não encontrado");
+                } else if (selectedType) {
+                    data = await getPokemonsByType(selectedType);
+                } else {
+                    data = await getPokemons();
+                }
+                setPokemons(data);
+            } catch (err) {
+                console.error(err);
+                setError("Erro ao buscar Pokémon");
+                setPokemons([]);
             } finally {
                 setLoading(false);
             }
         })();
-    }, []);
+    }, [selectedType, searchName]);
 
     return (
         <div className="flex">
-            <div className="h-full w-80 sticky top-6 p-6 my-8 ml-8 mr-4 bg-[#023047] rounded-xl flex flex-col gap-6 shadow-md">
+            <div className="h-full w-80 sticky top-4 p-6 my-4 ml-8 mr-4 bg-[#023047] rounded-xl flex flex-col gap-6 shadow-md">
                 <div className="flex justify-between items-center">
                     <h2 className="text-xl font-semibold flex items-center gap-2 text-[#ffb703]">
                         <ListFilter size={22} />
                         Filtrar Pokemons
                     </h2>
-
-                    <button className="bg-[#ffb703] p-2 rounded-full hover:opacity-90">
-                        <X size={20} className="text-white" />
-                    </button>
                 </div>
 
                 <hr />
@@ -42,65 +76,19 @@ const Home = () => {
                         Por Tipo
                     </h3>
                     <div className="flex flex-col gap-2 pl-6">
-                        <label className="flex items-center gap-2 text-white">
-                            <input type="radio" name="tipo" value="fire" className="accent-[#ffb703]" />
-                            Fogo
-                        </label>
-                        <label className="flex items-center gap-2 text-white">
-                            <input type="radio" name="tipo" value="water" className="accent-[#ffb703]" />
-                            Água
-                        </label>
-                        <label className="flex items-center gap-2 text-white">
-                            <input type="radio" name="tipo" value="grass" className="accent-[#ffb703]" />
-                            Grama
-                        </label>
-                        <label className="flex items-center gap-2 text-white">
-                            <input type="radio" name="tipo" value="electric" className="accent-[#ffb703]" />
-                            Elétrico
-                        </label>
-                        <label className="flex items-center gap-2 text-white">
-                            <input type="radio" name="tipo" value="insect" className="accent-[#ffb703]" />
-                            Inseto
-                        </label>
-                        <label className="flex items-center gap-2 text-white">
-                            <input type="radio" name="tipo" value="ground" className="accent-[#ffb703]" />
-                            Terra
-                        </label>
-                    </div>
-                </div>
-
-                <hr />
-
-                <div className="flex flex-col gap-3">
-                    <h3 className="text-lg font-semibold flex gap-2 items-center text-[#ffb703]">
-                        <Calendar size={22} />
-                        Por Geração
-                    </h3>
-                    <div className="flex flex-col gap-2 pl-6">
-                        <label className="flex items-center gap-2 text-white">
-                            <input type="radio" name="gen" value="generation-i" className="accent-[#ffb703]" />
-                            Geração I
-                        </label>
-                        <label className="flex items-center gap-2 text-white">
-                            <input type="radio" name="gen" value="generation-ii" className="accent-[#ffb703]" />
-                            Geração II
-                        </label>
-                        <label className="flex items-center gap-2 text-white">
-                            <input type="radio" name="gen" value="generation-iii" className="accent-[#ffb703]" />
-                            Geração III
-                        </label>
-                        <label className="flex items-center gap-2 text-white">
-                            <input type="radio" name="gen" value="generation-iv" className="accent-[#ffb703]" />
-                            Geração IV
-                        </label>
-                        <label className="flex items-center gap-2 text-white">
-                            <input type="radio" name="gen" value="generation-v" className="accent-[#ffb703]" />
-                            Geração V
-                        </label>
-                        <label className="flex items-center gap-2 text-white">
-                            <input type="radio" name="gen" value="generation-vi" className="accent-[#ffb703]" />
-                            Geração VI
-                        </label>
+                        {types.map((type) => (
+                            <label key={type.value} className="flex items-center gap-2 text-white">
+                                <input
+                                    type="radio"
+                                    name="tipo"
+                                    value={type.value}
+                                    className="accent-[#ffb703]"
+                                    checked={selectedType === type.value}
+                                    onChange={(e) => setSelectedType(e.target.value)}
+                                />
+                                {type.label}
+                            </label>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -111,8 +99,13 @@ const Home = () => {
                         className="flex-1 px-4 text-gray-700 focus:outline-none"
                         type="text"
                         placeholder="Busque seu Pokémon favorito..."
+                        value={searchName}
+                        onChange={(e) => setSearchName(e.target.value)}
                     />
-                    <button className="px-4 py-2 text-white bg-[#ffb703]">
+                    <button
+                        className="px-4 py-2 text-white bg-[#ffb703]"
+                        onClick={() => setSearchName(searchName)}
+                    >
                         <Search size={22} />
                     </button>
                 </div>
@@ -122,14 +115,19 @@ const Home = () => {
                         Conheça Nossa <span className="text-[#ffb703] italic text-5xl">Pokedex!</span>
                     </h1>
 
-                    {loading ? (
+                    {loading || searching ? (
                         <div className="col-span-3 flex justify-center items-center">
                             <div className="w-10 h-10 border-4 border-gray-300 border-t-[#ffb703] rounded-full animate-spin"></div>
+                        </div>
+                    ) : error ? (
+                        <div className="flex flex-col items-center justify-center">
+                            <SearchX size={50} color="#023047" />
+                            <p className="text-[#023047] text-2xl font-semibold">{error}</p>
                         </div>
                     ) : (
                         <div className="grid grid-cols-4 gap-12">
                             {pokemons.map((pokemon) => (
-                                <BookCard key={pokemon.id} pokemon={pokemon} />
+                                <PokemonCard key={pokemon.id} pokemon={pokemon} />
                             ))}
                         </div>
                     )}

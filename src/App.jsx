@@ -1,9 +1,9 @@
 import './App.css'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
-import PopularBooks from './pages/PopularBooks'
-import MyBooks from './pages/MyBooks'
+import MyPokemon from './pages/MyPokemon'
 import Home from './pages/Home'
-import { House, BookOpen, Bookmark, User } from 'lucide-react';
+import { House, User } from 'lucide-react';
+import PokemonPage from "./pages/PokemonPage";
 
 function App() {
 
@@ -26,19 +26,6 @@ function App() {
               Home
             </Link>
           </li>
-
-          <li>
-            <Link
-              to="/mybooks"
-              className="group flex items-center gap-2 text-white font-semibold text-lg hover:text-[#ffb703] transition-colors"
-            >
-              <Bookmark
-                size={22}
-                className="text-white group-hover:text-[#ffb703] transition-colors"
-              />
-              Meus Pokemon
-            </Link>
-          </li>
         </ul>
         <div className='bg-[#FDF6EC] rounded-full p-2'>
           <User
@@ -51,8 +38,8 @@ function App() {
       <div className='bg-[#034c6a] min-h-screen'>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/popularbooks" element={<PopularBooks />} />
-          <Route path="/mybooks" element={<MyBooks />} />
+          <Route path="/mypokemon" element={<MyPokemon />} />
+          <Route path="/pokemon/:id" element={<PokemonPage />} />
         </Routes>
       </div>
     </BrowserRouter>
