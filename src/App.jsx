@@ -1,6 +1,5 @@
 import './App.css'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
-import MyPokemon from './pages/MyPokemon'
 import Home from './pages/Home'
 import { House, User } from 'lucide-react';
 import PokemonPage from "./pages/PokemonPage";
@@ -27,7 +26,7 @@ function App() {
             </Link>
           </li>
         </ul>
-        <div className='bg-[#FDF6EC] rounded-full p-2'>
+        <div className='bg-[#FDF6EC] rounded-full p-3 flex items-center justify-center'>
           <User
             size={25}
             className="text-[#283618]"
@@ -38,7 +37,6 @@ function App() {
       <div className='bg-[#034c6a] min-h-screen'>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/mypokemon" element={<MyPokemon />} />
           <Route path="/pokemon/:id" element={<PokemonPage />} />
         </Routes>
       </div>

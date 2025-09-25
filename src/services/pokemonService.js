@@ -7,7 +7,7 @@ const api = axios.create({
 export const getPokemons = async () => {
   try {
     const response = await api.get(`/pokemon`, {
-      params: { limit: 52 },
+      params: { limit: 55 },
     });
 
     const pokemons = await Promise.all(
@@ -40,11 +40,13 @@ export const getPokemonById = async (id) => {
       name: data.name,
       image: data.sprites.other["official-artwork"].front_default,
       shiny: data.sprites.other["official-artwork"].front_shiny,
+      sprite: data.sprites.front_default,
+      sprite_shiny: data.sprites.front_shiny,
       types: data.types.map((t) => t.type.name),
-      description:
-        species.flavor_text_entries.find(
-          (entry) => entry.language.name === "en"
-        )?.flavor_text.replace(/\n|\f/g, " "),
+      description: species.flavor_text_entries.find((entry) => entry.language.name === "en")?.flavor_text.replace(/\n|\f/g, " "),
+      happiness: species.base_happiness,
+      capture_rate: species.capture_rate,
+      evolves_from: species.evolves_from_species?.name ?? "Primeiro estágio" ,
     };
   } catch (error) {
     console.error("Erro ao buscar Pokémon:", error);
@@ -59,7 +61,7 @@ export const getPokemonsByType = async (type) => {
     });
 
     const pokemons = await Promise.all(
-      data.pokemon.slice(0, 52).map(async (p) => {
+      data.pokemon.slice(0, 55).map(async (p) => {
         const response = await api.get(p.pokemon.url);
         const d = response.data;
         return {

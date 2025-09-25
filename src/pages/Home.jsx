@@ -30,7 +30,6 @@ const Home = () => {
     const [loading, setLoading] = useState(true)
     const [searchName, setSearchName] = useState("");
     const [error, setError] = useState("");
-    const [searching, setSearching] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -115,7 +114,7 @@ const Home = () => {
                         Conheça Nossa <span className="text-[#ffb703] italic text-5xl">Pokedex!</span>
                     </h1>
 
-                    {loading || searching ? (
+                    {loading ? (
                         <div className="col-span-3 flex justify-center items-center">
                             <div className="w-10 h-10 border-4 border-gray-300 border-t-[#ffb703] rounded-full animate-spin"></div>
                         </div>
@@ -125,7 +124,7 @@ const Home = () => {
                             <p className="text-[#023047] text-2xl font-semibold">{error}</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-4 gap-12">
+                        <div className="grid grid-cols-5 gap-12">
                             {pokemons.map((pokemon) => (
                                 <PokemonCard key={pokemon.id} pokemon={pokemon} />
                             ))}
